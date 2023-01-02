@@ -1,4 +1,5 @@
 import ast
+import types
 from pprint import pprint
 
 def unwind_x(x):
@@ -77,7 +78,10 @@ def unwind_constant(x):
         return f"'{x.value}'"
     elif t == int:
         return x.value
+    elif t == types.NoneType:
+        return None
     else:
+        print(ast.dump(x, indent=4))
         raise ValueError(f"{t}")
 
 def unwind_function_def(x):
@@ -194,6 +198,14 @@ def unwind_tuple(x):
     r = ['tuple', *elts]
     return r
 
+def unwind_ann_assign(x):
+    print(ast.dump(x, indent=4))
+    target = unwind(x.target)
+    annotation = unwind(x.annotation)
+    value = unwind(x.value)
+    r = ['ann_assign', target, annotation, value]
+    return r
+
 unwind_table = {
         ast.Module: unwind_module,
         ast.Import: unwind_import,
@@ -228,6 +240,7 @@ unwind_table = {
         ast.JoinedStr: unwind_joined_str,
         ast.FormattedValue: unwind_formatted_value,
         ast.Mult: unwind_mult,
+        ast.AnnAssign: unwind_ann_assign,
         }
 
 def unwind_list(x):
