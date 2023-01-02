@@ -105,7 +105,12 @@ def unwind_arguments(x):
     return r
 
 def unwind_arg(x):
-    return x.arg
+    if x.annotation:
+        annotation = unwind(x.annotation)
+        r = [x.arg, annotation]
+        return r
+    else:
+        return x.arg
 
 def unwind_assert(x):
     test = unwind(x.test)
@@ -206,6 +211,17 @@ def unwind_ann_assign(x):
     r = ['ann_assign', target, annotation, value]
     return r
 
+def unwind_subscript(x):
+    value = unwind(x.value)
+    _slice = unwind(x.slice)
+    r = ['subscript', value, _slice]
+    return r
+
+def unwind_index(x):
+    value = unwind(x.value)
+    r = ['index', value]
+    return r
+
 unwind_table = {
         ast.Module: unwind_module,
         ast.Import: unwind_import,
@@ -241,6 +257,8 @@ unwind_table = {
         ast.FormattedValue: unwind_formatted_value,
         ast.Mult: unwind_mult,
         ast.AnnAssign: unwind_ann_assign,
+        ast.Subscript: unwind_subscript,
+        ast.Index: unwind_index,
         }
 
 def unwind_list(x):
