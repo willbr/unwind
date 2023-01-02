@@ -228,12 +228,14 @@ def unwind(x):
     return fn(x)
 
 if __name__ == '__main__':
-    with open('example.py') as f:
+    from sys import argv
+    fn = argv[1]
+    with open(fn) as f:
         s = f.read()
 
-#print(s)
+    #print(s)
     tree = ast.parse(s)
-#print(ast.dump(tree, indent=4))
+    #print(ast.dump(tree, indent=4))
 
     pprint(unwind(tree))
 
