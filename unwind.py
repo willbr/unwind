@@ -176,7 +176,14 @@ def unwind_joined_str(x):
 
 def unwind_formatted_value(x):
     value = unwind(x.value)
-    r = ['formatted_value', value, x.conversion]
+    conversion_table = {
+        -1:  'no formatting',
+        115: '!s string format',
+        114: '!r repr format',
+        97:  '!a ascii format',
+    }
+    conversion = conversion_table[x.conversion]
+    r = ['formatted_value', value, conversion]
     return r
 
 def unwind_mult(x):
