@@ -80,6 +80,8 @@ def unwind_constant(x):
         return x.value
     elif t == types.NoneType:
         return None
+    elif t == bool:
+        return x.value
     else:
         print(ast.dump(x, indent=4))
         raise ValueError(f"{t}")
