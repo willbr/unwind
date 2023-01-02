@@ -206,7 +206,7 @@ def unwind_tuple(x):
     return r
 
 def unwind_ann_assign(x):
-    print(ast.dump(x, indent=4))
+    #print(ast.dump(x, indent=4))
     target = unwind(x.target)
     annotation = unwind(x.annotation)
     value = unwind(x.value)
@@ -269,6 +269,7 @@ unwind_table = {
         ast.Subscript: unwind_subscript,
         ast.Index: unwind_index,
         ast.While: unwind_while,
+        types.NoneType: lambda x: None,
         }
 
 def unwind_list(x):
