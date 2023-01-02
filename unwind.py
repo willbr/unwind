@@ -92,7 +92,7 @@ def unwind_arguments(x):
     kwonlyargs = unwind_list(x.kwonlyargs)
     kw_defaults = unwind_list(x.kw_defaults)
     defaults = unwind_list(x.defaults)
-    r = ['arguments']
+    r = []
     if posonlyargs: r.append(['posonlyargs', *posonlyargs])
     if args: r.append(['args', *args])
     if kwonlyargs: r.append(['kwonlyargs', *kwonlyargs])
