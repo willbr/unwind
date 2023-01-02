@@ -315,15 +315,20 @@ def unwind(x):
         raise ValueError(f"missing unwind function for {t}")
     return fn(x)
 
+def unwind_file(filename):
+    with open(filename) as f:
+        s = f.read()
+        r = unwind_string(s)
+        return r
+
+def unwind_string(s):
+    tree = ast.parse(s)
+    r = unwind(tree)
+    return r
+
 if __name__ == '__main__':
     from sys import argv
     fn = argv[1]
-    with open(fn) as f:
-        s = f.read()
 
-    #print(s)
-    tree = ast.parse(s)
-    #print(ast.dump(tree, indent=4))
-
-    pprint(unwind(tree))
+    pprint(unwind_file(fn))
 

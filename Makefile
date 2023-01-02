@@ -1,5 +1,5 @@
 all:
-	python unwind.py c.py
+	python -m unwind c.py
 
 wall:
 	watchexec -cr "make all"
