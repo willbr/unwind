@@ -72,7 +72,13 @@ def unwind_keyword(x):
     return r
 
 def unwind_constant(x):
-    return x.value
+    t = type(x.value)
+    if t == str:
+        return f"'{x.value}'"
+    elif t == int:
+        return x.value
+    else:
+        raise ValueError(f"{t}")
 
 def unwind_function_def(x):
     args = unwind(x.args)
