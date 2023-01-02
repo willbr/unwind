@@ -131,6 +131,13 @@ def unwind_binop(x):
     r = [op, left, right]
     return r
 
+def unwind_unary_op(x):
+    #print(ast.dump(x, indent=4))
+    op = unwind(x.op)
+    operand = unwind(x.operand)
+    r = [op, operand]
+    return r
+
 def unwind_add(x):
     return '+'
 
@@ -231,6 +238,25 @@ def unwind_while(x):
     r = ['while', test, body]
     return r
 
+def unwind_match(x):
+    #print(ast.dump(x, indent=4))
+    subject = unwind(x.subject)
+    cases = unwind_list(x.cases)
+    r = ['match', subject, cases]
+    return r
+
+def unwind_match_case(x):
+    #print(ast.dump(x, indent=4))
+    pattern = unwind(x.pattern)
+    body = unwind_list(x.body)
+    r = ['match_case', pattern, body]
+    return r
+
+def unwind_match_as(x):
+    #print(ast.dump(x, indent=4))
+    r = ['match_as', x.name]
+    return r
+
 unwind_table = {
         ast.Module: unwind_module,
         ast.Import: unwind_import,
@@ -253,6 +279,7 @@ unwind_table = {
         ast.Assert: unwind_assert,
         ast.Return: unwind_return,
         ast.BinOp: unwind_binop,
+        ast.UnaryOp: unwind_unary_op,
         ast.Add: unwind_add,
         ast.ListComp: unwind_list_comp,
         ast.comprehension: unwind_comprehension,
@@ -261,6 +288,7 @@ unwind_table = {
         ast.If: unwind_if,
         ast.Compare: unwind_compare,
         ast.Eq: unwind_eq,
+        ast.NotEq: lambda x: "!=",
         ast.Raise: unwind_raise,
         ast.JoinedStr: unwind_joined_str,
         ast.FormattedValue: unwind_formatted_value,
@@ -270,6 +298,11 @@ unwind_table = {
         ast.Index: unwind_index,
         ast.While: unwind_while,
         types.NoneType: lambda x: None,
+        ast.Match: unwind_match,
+        ast.match_case: unwind_match_case,
+        ast.MatchAs: unwind_match_as,
+        ast.Not: lambda x: "not",
+        ast.USub: lambda x: "USub",
         }
 
 def unwind_list(x):
