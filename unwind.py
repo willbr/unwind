@@ -222,6 +222,13 @@ def unwind_index(x):
     r = ['index', value]
     return r
 
+def unwind_while(x):
+    #print(ast.dump(x, indent=4))
+    test = unwind(x.test)
+    body = unwind_list(x.body)
+    r = ['while', test, body]
+    return r
+
 unwind_table = {
         ast.Module: unwind_module,
         ast.Import: unwind_import,
@@ -259,6 +266,7 @@ unwind_table = {
         ast.AnnAssign: unwind_ann_assign,
         ast.Subscript: unwind_subscript,
         ast.Index: unwind_index,
+        ast.While: unwind_while,
         }
 
 def unwind_list(x):
