@@ -6,3 +6,8 @@ def double(n):
 
 print(f"double(a) = {double(a)}", end="")
 
+def main(argc: int, argv: list[str]) -> int:
+    print("hi")
+    print("bye")
+    return 0
+
