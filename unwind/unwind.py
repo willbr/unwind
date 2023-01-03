@@ -75,7 +75,7 @@ def unwind_keyword(x):
 def unwind_constant(x):
     t = type(x.value)
     if t == str:
-        return f"'{x.value}'"
+        return f'"{x.value}"'
     elif t == int:
         return x.value
     elif t == types.NoneType:
@@ -324,6 +324,7 @@ def unwind_file(filename):
 
 def unwind_string(s):
     tree = ast.parse(s)
+    #print(ast.dump(tree, indent=4))
     r = unwind(tree)
     return r
 
