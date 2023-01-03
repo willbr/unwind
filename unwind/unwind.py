@@ -319,12 +319,18 @@ unwind_table = {
 def unwind_list(x):
     return list(map(unwind, x))
 
-def unwind(x):
-    t = type(x)
-    fn = unwind_table.get(t)
-    if fn == None:
-        raise ValueError(f"missing unwind function for {t}")
-    return fn(x)
+def unwind(node):
+    if fn := unwind_table.get(type(node)):
+        return fn(node)
+    result = []
+    for fieldname, value in ast.iter_fields(node):
+        if isinstance(value, (list, tuple)):
+            result.append((fieldname, [unwind(x) for x in value]))
+        elif isinstance(value, ast.AST):
+            result.append((fieldname, unwind(value)))
+        else:
+            result.append((fieldname, value))
+    return [node.__class__.__name__, result]
 
 def unwind_file(filename):
     with open(filename) as f:
@@ -337,10 +343,4 @@ def unwind_string(s):
     #print(ast.dump(tree, indent=4))
     r = unwind(tree)
     return r
-
-if __name__ == '__main__':
-    from sys import argv
-    fn = argv[1]
-
-    pprint(unwind_file(fn))
 
