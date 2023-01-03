@@ -88,8 +88,9 @@ def unwind_constant(x):
 
 def unwind_function_def(x):
     args = unwind(x.args)
+    returns = unwind(x.returns)
     body = unwind_list(x.body)
-    r = ['def', x.name, args, body]
+    r = ['def', x.name, args, returns, body]
     return r
 
 def unwind_arguments(x):
