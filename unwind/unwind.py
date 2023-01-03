@@ -2,6 +2,16 @@ import ast
 import types
 from pprint import pprint
 
+from rich.console import Console
+from rich.traceback import install
+from pathlib import Path
+
+install(show_locals=True)
+
+console = Console(markup=False)
+python_print = print
+print = console.print
+
 def unwind_x(x):
     print(ast.dump(x, indent=4))
     assert False
