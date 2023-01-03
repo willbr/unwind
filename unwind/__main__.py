@@ -2,9 +2,11 @@ import ast
 from pprint import pprint
 from sys import argv
 from pathlib import Path
-from .unwind import unwind_file
+from . import unwind_file
 
 fn = Path(argv[1])
 
-pprint(unwind_file(fn))
+tree = unwind_file(fn)
+for x in tree[1:]:
+    pprint(x)
 
