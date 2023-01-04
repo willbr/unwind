@@ -100,6 +100,12 @@ def unwind_function_def(x):
     args = unwind(x.args)
     returns = unwind(x.returns)
     body = unwind_list(x.body)
+    decorator_list = unwind_list(x.decorator_list)
+    type_comment = unwind(x.type_comment)
+    if decorator_list:
+        raise NotImplementedError
+    if type_comment:
+        raise NotImplementedError
     r = ['def', x.name, args, returns, body]
     return r
 
