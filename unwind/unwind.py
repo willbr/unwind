@@ -325,28 +325,32 @@ unwind_table = {
 def unwind_list(x):
     return list(map(unwind, x))
 
-def unwind(node):
-    if fn := unwind_table.get(type(node)):
+def unwind(node, table=None):
+    if table == None:
+        table = unwind_table
+
+    if fn := table.get(type(node)):
         return fn(node)
+
     result = []
     for fieldname, value in ast.iter_fields(node):
         if isinstance(value, (list, tuple)):
-            result.append((fieldname, [unwind(x) for x in value]))
+            result.append([fieldname, [unwind(x, table) for x in value]])
         elif isinstance(value, ast.AST):
-            result.append((fieldname, unwind(value)))
+            result.append([fieldname, unwind(value, table)])
         else:
-            result.append((fieldname, value))
+            result.append([fieldname, value])
     return [node.__class__.__name__, result]
 
-def unwind_file(filename):
+def unwind_file(filename, table=None):
     with open(filename) as f:
         s = f.read()
-        r = unwind_string(s)
+        r = unwind_string(s, table)
         return r
 
-def unwind_string(s):
+def unwind_string(s, table=None):
     tree = ast.parse(s)
     #print(ast.dump(tree, indent=4))
-    r = unwind(tree)
+    r = unwind(tree, table)
     return r
 
