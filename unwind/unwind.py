@@ -304,6 +304,8 @@ unwind_table = {
         ast.Dict: unwind_dict,
         ast.If: unwind_if,
         ast.Compare: unwind_compare,
+        ast.Lt: lambda x: "<",
+        ast.LtE: lambda x: "<=",
         ast.Eq: unwind_eq,
         ast.NotEq: lambda x: "!=",
         ast.Raise: unwind_raise,
