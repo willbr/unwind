@@ -237,6 +237,13 @@ def unwind_ann_assign(x):
     r = ['ann_assign', target, annotation, value]
     return r
 
+def unwind_aug_assign(x):
+    target = unwind(x.target)
+    op = unwind(x.op)
+    value = unwind(x.value)
+    r = ['aug_assign', target, op, value]
+    return r
+
 def unwind_subscript(x):
     value = unwind(x.value)
     _slice = unwind(x.slice)
@@ -313,6 +320,7 @@ unwind_table = {
         ast.FormattedValue: unwind_formatted_value,
         ast.Mult: unwind_mult,
         ast.AnnAssign: unwind_ann_assign,
+        ast.AugAssign: unwind_aug_assign,
         ast.Subscript: unwind_subscript,
         ast.Index: unwind_index,
         ast.While: unwind_while,
