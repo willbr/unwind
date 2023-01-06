@@ -7,7 +7,9 @@ def double(n):
 print(f"double(a) = {double(a)}", end="")
 
 def main(argc: int, argv: list[str]) -> int:
-    print("hi")
-    print("bye")
+    for i in range(1, 10, 2):
+        print("{ i d}")
+    for k, v in locals():
+        print(k, v)
     return 0
 

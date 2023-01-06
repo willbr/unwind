@@ -278,6 +278,15 @@ def unwind_match_as(x):
     r = ['match_as', x.name]
     return r
 
+def unwind_for(x):
+    #print(ast.dump(x, indent=4))
+    target = unwind(x.target)
+    iter = unwind(x.iter)
+    body = unwind_list(x.body)
+    orelse = unwind_list(x.orelse)
+    r = ['for', target, iter, body, orelse]
+    return r
+
 unwind_table = {
         ast.Module: unwind_module,
         ast.Import: unwind_import,
@@ -333,6 +342,7 @@ unwind_table = {
         ast.Break: lambda x: ["break"],
         ast.Continue: lambda x: ["continue"],
         ast.Pass: lambda x: ["pass"],
+        ast.For: unwind_for,
         }
 
 def unwind_list(x):
