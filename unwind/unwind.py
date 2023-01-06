@@ -196,9 +196,6 @@ def unwind_compare(x):
     r = ['compare', left, ops, comparators]
     return r
 
-def unwind_eq(x):
-    return '='
-
 def unwind_raise(x):
     exc = unwind(x.exc)
     r = ['raise', exc]
@@ -313,7 +310,7 @@ unwind_table = {
         ast.Compare: unwind_compare,
         ast.Lt: lambda x: "<",
         ast.LtE: lambda x: "<=",
-        ast.Eq: unwind_eq,
+        ast.Eq: lambda x: "==",
         ast.NotEq: lambda x: "!=",
         ast.Raise: unwind_raise,
         ast.JoinedStr: unwind_joined_str,
