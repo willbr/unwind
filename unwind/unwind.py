@@ -152,7 +152,10 @@ def unwind_unary_op(x):
     #print(ast.dump(x, indent=4))
     op = unwind(x.op)
     operand = unwind(x.operand)
-    r = [op, operand]
+    if op == 'USub':
+        r = -operand
+    else:
+        r = [op, operand]
     return r
 
 def unwind_add(x):
