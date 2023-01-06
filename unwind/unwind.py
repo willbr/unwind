@@ -330,6 +330,9 @@ unwind_table = {
         ast.MatchAs: unwind_match_as,
         ast.Not: lambda x: "not",
         ast.USub: lambda x: "USub",
+        ast.Break: lambda x: ["break"],
+        ast.Continue: lambda x: ["continue"],
+        ast.Pass: lambda x: ["pass"],
         }
 
 def unwind_list(x):
