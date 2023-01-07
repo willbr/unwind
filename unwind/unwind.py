@@ -190,7 +190,17 @@ def unwind_if(x):
     test = unwind(x.test)
     body = unwind_list(x.body)
     orelse = unwind_list(x.orelse)
-    r = ['if', test, body, orelse]
+
+    clauses = [[test, body]]
+
+    match orelse:
+        case [['cond', *child]]:
+            clauses.extend(child)
+        case []:
+            pass
+        case _:
+            clauses.append(['else', orelse])
+    r = ['cond', *clauses]
     return r
 
 def unwind_compare(x):
