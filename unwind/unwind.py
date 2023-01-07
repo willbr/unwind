@@ -189,7 +189,8 @@ def unwind_dict(x):
 def unwind_if(x):
     test = unwind(x.test)
     body = unwind_list(x.body)
-    r = ['if', test, body]
+    orelse = unwind_list(x.orelse)
+    r = ['if', test, body, orelse]
     return r
 
 def unwind_compare(x):
