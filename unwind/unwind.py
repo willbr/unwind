@@ -109,6 +109,16 @@ def unwind_function_def(x):
     r = ['def', x.name, args, returns, body]
     return r
 
+def unwind_class_def(x):
+    bases = unwind_list(x.bases)
+    keywords = unwind_list(x.keywords)
+    body = unwind_list(x.body)
+    decorator_list = unwind_list(x.decorator_list)
+    if decorator_list:
+        raise NotImplementedError
+    r = ['class', x.name, bases, keywords, body]
+    return r
+
 def unwind_arguments(x):
     posonlyargs = unwind_list(x.posonlyargs)
     args = unwind_list(x.args)
@@ -310,6 +320,7 @@ unwind_table = {
         ast.Expr: unwind_expr,
         ast.Assign: unwind_assign,
         ast.FunctionDef: unwind_function_def,
+        ast.ClassDef: unwind_class_def,
         ast.withitem: unwind_with_item,
         ast.Call: unwind_call,
         ast.Name: unwind_name,
