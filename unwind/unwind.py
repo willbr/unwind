@@ -203,13 +203,15 @@ def unwind_if(x):
 
     clauses = [[test, body]]
 
-    match orelse:
-        case [['cond', *child]]:
-            clauses.extend(child)
-        case []:
-            pass
-        case _:
+    if not orelse:
+        pass
+    else:
+        [[head,*tail]] = orelse
+        if head == 'cond':
+            clauses.extend(tail)
+        else:
             clauses.append(['else', orelse])
+
     r = ['cond', *clauses]
     return r
 
@@ -358,10 +360,10 @@ unwind_table = {
         ast.Subscript: unwind_subscript,
         ast.Index: unwind_index,
         ast.While: unwind_while,
-        types.NoneType: lambda x: None,
-        ast.Match: unwind_match,
-        ast.match_case: unwind_match_case,
-        ast.MatchAs: unwind_match_as,
+        #types.NoneType: lambda x: None,
+        #ast.Match: unwind_match,
+        #ast.match_case: unwind_match_case,
+        #ast.MatchAs: unwind_match_as,
         ast.Not: lambda x: "not",
         ast.USub: lambda x: "USub",
         ast.Break: lambda x: ["break"],
@@ -379,6 +381,9 @@ def unwind(node, table=None):
 
     if fn := table.get(type(node)):
         return fn(node)
+
+    if node == None:
+        return None
 
     result = []
     for fieldname, value in ast.iter_fields(node):
