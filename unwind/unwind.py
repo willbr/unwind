@@ -90,6 +90,8 @@ def unwind_constant(x):
         return f'"{x.value}"'
     elif t == int:
         return x.value
+    elif t == float:
+        return x.value
     #elif t == types.NoneType:
     #    return None
     elif t == bool:
