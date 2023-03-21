@@ -172,9 +172,6 @@ def unwind_unary_op(x):
         r = [op, operand]
     return r
 
-def unwind_add(x):
-    return '+'
-
 def unwind_list_comp(x):
     elt = unwind(x.elt)
     generators = unwind_list(x.generators)
@@ -247,9 +244,6 @@ def unwind_formatted_value(x):
     conversion = conversion_table[x.conversion]
     r = ['formatted_value', value, conversion]
     return r
-
-def unwind_mult(x):
-    return '*'
 
 def unwind_tuple(x):
     elts = unwind_list(x.elts)
@@ -341,7 +335,12 @@ unwind_table = {
         ast.Return: unwind_return,
         ast.BinOp: unwind_binop,
         ast.UnaryOp: unwind_unary_op,
-        ast.Add: unwind_add,
+        ast.Add: lambda x: '+',
+        ast.Sub: lambda x: '-',
+        ast.Mult: lambda x: '*',
+        ast.Div: lambda x: '/',
+        ast.Pow: lambda x: 'pow',
+        ast.FloorDiv: lambda x: 'floor_div',
         ast.ListComp: unwind_list_comp,
         ast.comprehension: unwind_comprehension,
         ast.Starred: unwind_starred,
@@ -358,7 +357,6 @@ unwind_table = {
         ast.Raise: unwind_raise,
         ast.JoinedStr: unwind_joined_str,
         ast.FormattedValue: unwind_formatted_value,
-        ast.Mult: unwind_mult,
         ast.AnnAssign: unwind_ann_assign,
         ast.AugAssign: unwind_aug_assign,
         ast.Subscript: unwind_subscript,

@@ -10,3 +10,11 @@ def main():
         pass
     elif i == 0:
         pass
+
+    print(1 + 2)
+    print(4 - 3)
+    print(1 * 10)
+    print(10 / 2)
+    print(10 % 2)
+    print(10 ** 2)
+    print(10 // 2)
