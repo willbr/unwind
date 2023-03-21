@@ -206,12 +206,14 @@ def unwind_if(x):
 
     if not orelse:
         pass
-    else:
+    elif len(orelse) == 1:
         [[head,*tail]] = orelse
         if head == 'cond':
             clauses.extend(tail)
         else:
             clauses.append(['else', orelse])
+    else:
+        clauses.append(['else', orelse])
 
     r = ['cond', *clauses]
     return r
