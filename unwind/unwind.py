@@ -162,6 +162,13 @@ def unwind_binop(x):
     r = [op, left, right]
     return r
 
+def unwind_boolop(x):
+    #print(ast.dump(x, indent=4))
+    op = unwind(x.op)
+    values = unwind_list(x.values)
+    r = [op, *values]
+    return r
+
 def unwind_unary_op(x):
     #print(ast.dump(x, indent=4))
     op = unwind(x.op)
@@ -336,6 +343,7 @@ unwind_table = {
         ast.Assert: unwind_assert,
         ast.Return: unwind_return,
         ast.BinOp: unwind_binop,
+        ast.BoolOp: unwind_boolop,
         ast.UnaryOp: unwind_unary_op,
         ast.Add: lambda x: '+',
         ast.Sub: lambda x: '-',
@@ -368,6 +376,8 @@ unwind_table = {
         #ast.Match: unwind_match,
         #ast.match_case: unwind_match_case,
         #ast.MatchAs: unwind_match_as,
+        ast.And: lambda x: "and",
+        ast.Or: lambda x: "or",
         ast.Not: lambda x: "not",
         ast.USub: lambda x: "USub",
         ast.Break: lambda x: ["break"],
