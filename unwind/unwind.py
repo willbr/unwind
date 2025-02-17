@@ -10,10 +10,8 @@ console = Console(markup=False)
 python_print = print
 print = console.print
 
-def unwind_x(x):
-    print(ast.dump(x, indent=4))
-    assert False
-    return None
+def unwind_unknown(x):
+    assert False, f'unknown element:\n{ast.dump(x, indent=4)}'
 
 def unwind_module(x):
     r = ['module'] + [unwind(c) for c in x.body]
