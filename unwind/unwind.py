@@ -1,6 +1,7 @@
 import ast
 import types
 
+from typing import Optional, Dict
 from rich.console import Console
 from rich.traceback import install
 
@@ -385,7 +386,7 @@ unwind_table = {
 def unwind_list(x):
     return list(map(unwind, x))
 
-def unwind(node, table=None):
+def unwind(node: ast.AST, table:Optional[Dict]=None):
     if table is None:
         table = unwind_table
 
