@@ -1,10 +1,8 @@
 import ast
 import types
-from pprint import pprint
 
 from rich.console import Console
 from rich.traceback import install
-from pathlib import Path
 
 install(show_locals=True)
 
