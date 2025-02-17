@@ -383,6 +383,22 @@ unwind_table = {
         ast.For: unwind_for,
         }
 
+if hasattr(ast, 'Match'):
+    def unwind_match(x):
+        subject = unwind(x.subject)
+        cases = unwind_list(x.cases)
+        return ['match', subject, cases]
+
+    unwind_table[ast.Match] = unwind_match
+
+if hasattr(ast, 'MatchCase'):
+    def unwind_match_case(x):
+        pattern = unwind(x.pattern)
+        body = unwind_list(x.body)
+        return ['match_case', pattern, body]
+
+    unwind_table[ast.MatchCase] = unwind_match_case
+
 def unwind_list(x):
     return list(map(unwind, x))
 
