@@ -83,7 +83,7 @@ def unwind_keyword(x):
     return r
 
 def unwind_constant(x):
-    if x == None:
+    if x is None:
         return None
     t = type(x.value)
     if t == str:
@@ -92,8 +92,8 @@ def unwind_constant(x):
         return x.value
     elif t == float:
         return x.value
-    #elif t == types.NoneType:
-    #    return None
+    elif t == types.NoneType:
+        return None
     elif t == bool:
         return x.value
     else:
@@ -390,13 +390,13 @@ def unwind_list(x):
     return list(map(unwind, x))
 
 def unwind(node, table=None):
-    if table == None:
+    if table is None:
         table = unwind_table
 
     if fn := table.get(type(node)):
         return fn(node)
 
-    if node == None:
+    if node is None:
         return None
 
     result = []
