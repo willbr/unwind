@@ -8,8 +8,6 @@ from rich.traceback import install
 install(show_locals=True)
 
 console = Console(markup=False)
-python_print = print
-print = console.print
 
 def unwind_unknown(x):
     assert False, f'unknown element:\n{ast.dump(x, indent=4)}'
@@ -94,7 +92,7 @@ def unwind_constant(x):
     elif t == bool:
         return x.value
     else:
-        print(ast.dump(x, indent=4))
+        console.print(ast.dump(x, indent=4))
         raise ValueError(f"{t}")
 
 def unwind_function_def(x):
@@ -160,14 +158,14 @@ def unwind_binop(x):
     return r
 
 def unwind_boolop(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     op = unwind(x.op)
     values = unwind_list(x.values)
     r = [op, *values]
     return r
 
 def unwind_unary_op(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     op = unwind(x.op)
     operand = unwind(x.operand)
     if op == 'USub':
@@ -257,7 +255,7 @@ def unwind_tuple(x):
     return r
 
 def unwind_ann_assign(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     target = unwind(x.target)
     annotation = unwind(x.annotation)
     value = unwind(x.value)
@@ -283,33 +281,33 @@ def unwind_index(x):
     return r
 
 def unwind_while(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     test = unwind(x.test)
     body = unwind_list(x.body)
     r = ['while', test, body]
     return r
 
 def unwind_match(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     subject = unwind(x.subject)
     cases = unwind_list(x.cases)
     r = ['match', subject, cases]
     return r
 
 def unwind_match_case(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     pattern = unwind(x.pattern)
     body = unwind_list(x.body)
     r = ['match_case', pattern, body]
     return r
 
 def unwind_match_as(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     r = ['match_as', x.name]
     return r
 
 def unwind_for(x):
-    #print(ast.dump(x, indent=4))
+    #console.print(ast.dump(x, indent=4))
     target = unwind(x.target)
     iter = unwind(x.iter)
     body = unwind_list(x.body)
@@ -430,7 +428,7 @@ def unwind_file(filename, table=None):
 
 def unwind_string(s, table=None):
     tree = ast.parse(s)
-    #print(ast.dump(tree, indent=4))
+    #console.print(ast.dump(tree, indent=4))
     r = unwind(tree, table)
     return r
 
