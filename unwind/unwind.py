@@ -168,7 +168,7 @@ def unwind_unary_op(x):
     #console.print(ast.dump(x, indent=4))
     op = unwind(x.op)
     operand = unwind(x.operand)
-    if op == 'USub':
+    if op == 'USub' and isinstance(operand, (int, float)):
         r = -operand
     else:
         r = [op, operand]
@@ -287,25 +287,6 @@ def unwind_while(x):
     r = ['while', test, body]
     return r
 
-def unwind_match(x):
-    #console.print(ast.dump(x, indent=4))
-    subject = unwind(x.subject)
-    cases = unwind_list(x.cases)
-    r = ['match', subject, cases]
-    return r
-
-def unwind_match_case(x):
-    #console.print(ast.dump(x, indent=4))
-    pattern = unwind(x.pattern)
-    body = unwind_list(x.body)
-    r = ['match_case', pattern, body]
-    return r
-
-def unwind_match_as(x):
-    #console.print(ast.dump(x, indent=4))
-    r = ['match_as', x.name]
-    return r
-
 def unwind_for(x):
     #console.print(ast.dump(x, indent=4))
     target = unwind(x.target)
@@ -365,12 +346,7 @@ unwind_table = {
         ast.AnnAssign: unwind_ann_assign,
         ast.AugAssign: unwind_aug_assign,
         ast.Subscript: unwind_subscript,
-        ast.Index: unwind_index,
         ast.While: unwind_while,
-        #types.NoneType: lambda x: None,
-        #ast.Match: unwind_match,
-        #ast.match_case: unwind_match_case,
-        #ast.MatchAs: unwind_match_as,
         ast.And: lambda x: "and",
         ast.Or: lambda x: "or",
         ast.Not: lambda x: "not",
@@ -380,6 +356,9 @@ unwind_table = {
         ast.Pass: lambda x: ["pass"],
         ast.For: unwind_for,
         }
+
+if hasattr(ast, 'Index'):
+    unwind_table[ast.Index] = unwind_index
 
 if hasattr(ast, 'Match'):
     def unwind_match(x):
