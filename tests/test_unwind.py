@@ -1,5 +1,5 @@
 import unittest
-from unwind import unwind_string
+from unwind import unwind_string, unwind_lua_string, unwind_lua_file
 
 class TestConstants(unittest.TestCase):
     def test_int(self):
@@ -228,6 +228,53 @@ class TestFileInputs(unittest.TestCase):
 
     def test_math(self):
         self._unwind_file('tests/math.py')
+
+class TestLua(unittest.TestCase):
+    def test_hello_world_string(self):
+        r = unwind_lua_string('print("hello, world")')
+        self.assertEqual(r, ['module', ['print', '"hello, world"']])
+
+    def test_hello_world_file(self):
+        r = unwind_lua_file('tests/hello.lua')
+        self.assertEqual(r, ['module', ['print', '"hello, world"']])
+
+    def test_assign(self):
+        r = unwind_lua_string('x = 1 + 2')
+        self.assertEqual(r, ['module', ['assign', 'x', ['+', 1, 2]]])
+
+    def test_local(self):
+        r = unwind_lua_string('local x = 5')
+        self.assertEqual(r, ['module', ['local', 'x', 5]])
+
+    def test_function_def(self):
+        r = unwind_lua_string('function f(a, b) return a + b end')
+        self.assertEqual(r, ['module',
+            ['def', 'f', [['args', 'a', 'b']], None,
+             [['return', ['+', 'a', 'b']]]]])
+
+    def test_if_elseif_else(self):
+        r = unwind_lua_string('if a then x = 1 elseif b then x = 2 else x = 3 end')
+        self.assertEqual(r, ['module', ['cond',
+            ['a', [['assign', 'x', 1]]],
+            ['b', [['assign', 'x', 2]]],
+            ['else', [['assign', 'x', 3]]]]])
+
+    def test_and_or_compare(self):
+        r = unwind_lua_string('if a < 4 and b > 0 or c then x = 1 end')
+        self.assertEqual(r, ['module', ['cond',
+            [['or', ['and', ['<', 'a', 4], ['>', 'b', 0]], 'c'],
+             [['assign', 'x', 1]]]]])
+
+    def test_unary_minus(self):
+        r = unwind_lua_string('x = -y')
+        self.assertEqual(r, ['module', ['assign', 'x', ['USub', 'y']]])
+
+    def test_pong_smoke(self):
+        r = unwind_lua_file('tests/pong.lua')
+        self.assertEqual(r[0], 'module')
+        names = [s[1] for s in r if s[0] == 'def']
+        self.assertEqual(names, ['_init', '_update', '_draw'])
+
 
 if __name__ == '__main__':
     unittest.main()

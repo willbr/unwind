@@ -4,7 +4,7 @@ from pprint import pprint
 from sys import argv
 from pathlib import Path
 from rich.console import Console
-from . import unwind_file
+from . import unwind_file, unwind_lua_file
 
 console = Console(markup=False)
 python_print = print
@@ -26,7 +26,10 @@ for file in args.files:
     if args.dump:
         dump_file(file)
     else:
-        tree = unwind_file(file)
+        if file.endswith('.lua'):
+            tree = unwind_lua_file(file)
+        else:
+            tree = unwind_file(file)
         for x in tree[1:]:
             pprint(x)
 
